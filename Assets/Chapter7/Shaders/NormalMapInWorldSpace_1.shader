@@ -1,4 +1,4 @@
-﻿Shader"Unity Shader Book/Chapter7/Normal Map In World Space"
+Shader"Unity Shader Book/Chapter7/Normal Map In World Space TBN"
 {
     Properties
     {
@@ -44,14 +44,14 @@
                 float4 uv0 : TEXCOORD0;
             };
 
-            //这里传递的是tangentWS和normalWS，书里传递的是TBN矩阵（NormalMapInWorldSpace_1.shader)
+            //TBN矩阵 [T B N], 将TBN分别存在TEXCOORD中，w分量来存PositionWS
             struct v2f
             {
                 float4 positonHCS : SV_POSITION;
                 float4 uv : TEXCOORD0;
-                float3 normalWS : TEXCOORD1;
-                float4 tangentWS : TEXCOORD2;
-                float3 positionWS : TEXCOORD3;
+                float4 T : TEXCOORD1;
+                float4 B : TEXCOORD2;
+                float4 N : TEXCOORD3;
             };
 
             CBUFFER_START(UnityPerMaterial)
@@ -70,13 +70,17 @@
             {
                 v2f OUT;
                 OUT.positonHCS = TransformObjectToHClip(IN.positionOS.xyz);
+                // float flip = IN.tangentOS.w * unity_WorldTransformParams.w;
+                float flip = IN.tangentOS.w;
+                VertexNormalInputs nrm = GetVertexNormalInputs(IN.normalOS, IN.positionOS);
+                float3x3 TBN = CreateTangentToWorld(nrm.normalWS, nrm.tangentWS, flip);
+                float3 positionWS = TransformObjectToWorld(IN.positionOS);
+                OUT.T = float4(TBN[0], positionWS.x);
+                OUT.B = float4(TBN[1], positionWS.y);
+                OUT.N = float4(TBN[2], positionWS.z);
                 OUT.uv.xy = TRANSFORM_TEX(IN.uv0, _MainTex);
                 OUT.uv.zw = TRANSFORM_TEX(IN.uv0, _BumpMap);
-
-                VertexNormalInputs nrm = GetVertexNormalInputs(IN.normalOS, IN.tangentOS);
-                OUT.normalWS = nrm.normalWS;
-                OUT.tangentWS = float4(nrm.tangentWS, IN.tangentOS.w);
-                OUT.positionWS = TransformObjectToWorld(IN.positionOS.xyz);
+                
                 return OUT;
             }
 
@@ -85,16 +89,15 @@
                 half3 albedo  = SAMPLE_TEXTURE2D(_MainTex , sampler_MainTex , IN.uv.xy).rgb
                                 * _ColorTint.rgb;
 
-                //这里的负缩放在CreateTangentToWorld()中处理过了。
-                // float flip = IN.tangentWS.w * unity_WorldTransformParams.w;
-                float flip = IN.tangentWS.w;
-                float3x3 T2W = CreateTangentToWorld(IN.normalWS, IN.tangentWS.xyz, flip);
-                float3 normalTS = UnpackNormalScale(
+                
+                float3 positonWS = float3(IN.T.w, IN.B.w, IN.N.w);
+                float3 nrmFromNM = UnpackNormalScale(
                     SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, IN.uv.zw), _BumpScale);
-                float3 N = normalize(mul(T2W, normalTS));
+                float3x3 TBN = float3x3(IN.T.xyz, IN.B.xyz, IN.N.xyz);
+                float3 N = mul(TBN, nrmFromNM);
                 Light mainlight = GetMainLight();
-                float3 V = normalize(GetWorldSpaceViewDir(IN.positionWS));
-                float3 L = normalize(mainlight.direction);
+                float3 L = mainlight.direction;
+                float3 V = GetWorldSpaceNormalizeViewDir(positonWS);
                 float3 H = normalize(V + L);
 
                 half  diff = saturate(dot(N, L));
@@ -104,7 +107,7 @@
                 half3 color = albedo * diff * mainLight.color
                             + _Specular.rgb * spec * mainLight.color;
 
-                return half4(color, 1);
+                return half4(positonWS, 1);
             }
 
 

@@ -73,7 +73,7 @@ Shader "Unity Shader Book/Chapter7/Normal Map In Tangent Space"
                 // 2. 计算 TBN → 世界
                 VertexNormalInputs nrm = GetVertexNormalInputs(IN.normalOS, IN.tangent);
                 // 处理模型负缩放：tangent.w * unity_WorldTransformParams.w
-                float  flip      = IN.tangent.w * unity_WorldTransformParams.w;
+                float  flip      = IN.tangent.w;
                 float3x3 T2W     = CreateTangentToWorld(nrm.normalWS, nrm.tangentWS, flip);
                 float3x3 W2T     = transpose(T2W);          // 世界 → 切线
 
