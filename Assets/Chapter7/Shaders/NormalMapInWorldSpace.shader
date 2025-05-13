@@ -91,13 +91,13 @@
                 float3x3 T2W = CreateTangentToWorld(IN.normalWS, IN.tangentWS.xyz, flip);
                 float3 normalTS = UnpackNormalScale(
                     SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, IN.uv.zw), _BumpScale);
-                float3 N = normalize(mul(T2W, normalTS));
+                float3 N = normalize(mul(normalTS, T2W)); //行主序（T, B, N)
                 Light mainlight = GetMainLight();
                 float3 V = normalize(GetWorldSpaceViewDir(IN.positionWS));
                 float3 L = normalize(mainlight.direction);
                 float3 H = normalize(V + L);
 
-                half  diff = saturate(dot(N, L));
+                half  diff = saturate(dot(N, L) * 0.5 + 0.5);
                 half  spec = pow(saturate(dot(N, H)), _Gloss);
 
                 Light mainLight = GetMainLight();

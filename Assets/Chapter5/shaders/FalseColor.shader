@@ -1,4 +1,4 @@
-﻿Shader "Unity Shader Book/Chapter 5/False Color"
+﻿Shader "Unity Shader Book/Chapter5/False Color"
 {
     SubShader
     {

@@ -72,9 +72,9 @@ Shader"Unity Shader Book/Chapter7/Normal Map In World Space TBN"
                 OUT.positonHCS = TransformObjectToHClip(IN.positionOS.xyz);
                 // float flip = IN.tangentOS.w * unity_WorldTransformParams.w;
                 float flip = IN.tangentOS.w;
-                VertexNormalInputs nrm = GetVertexNormalInputs(IN.normalOS, IN.positionOS);
+                VertexNormalInputs nrm = GetVertexNormalInputs(IN.normalOS, IN.tangentOS);
                 float3x3 TBN = CreateTangentToWorld(nrm.normalWS, nrm.tangentWS, flip);
-                float3 positionWS = TransformObjectToWorld(IN.positionOS);
+                float3 positionWS = TransformObjectToWorld(IN.positionOS.xyz);
                 OUT.T = float4(TBN[0], positionWS.x);
                 OUT.B = float4(TBN[1], positionWS.y);
                 OUT.N = float4(TBN[2], positionWS.z);
@@ -94,7 +94,7 @@ Shader"Unity Shader Book/Chapter7/Normal Map In World Space TBN"
                 float3 nrmFromNM = UnpackNormalScale(
                     SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, IN.uv.zw), _BumpScale);
                 float3x3 TBN = float3x3(IN.T.xyz, IN.B.xyz, IN.N.xyz);
-                float3 N = mul(TBN, nrmFromNM);
+                float3 N = mul(nrmFromNM, TBN);
                 Light mainlight = GetMainLight();
                 float3 L = mainlight.direction;
                 float3 V = GetWorldSpaceNormalizeViewDir(positonWS);
@@ -107,7 +107,7 @@ Shader"Unity Shader Book/Chapter7/Normal Map In World Space TBN"
                 half3 color = albedo * diff * mainLight.color
                             + _Specular.rgb * spec * mainLight.color;
 
-                return half4(positonWS, 1);
+                return half4(color, 1);
             }
 
 
