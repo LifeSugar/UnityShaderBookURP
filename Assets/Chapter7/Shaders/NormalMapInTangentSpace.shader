@@ -12,7 +12,7 @@ Shader "Unity Shader Book/Chapter7/Normal Map In Tangent Space"
 
     SubShader
     {
-        Tags { "RenderPipeline"="Universal Render Pipeline" "Queue"="Geometry" }
+        Tags { "RenderPipeline"="UniversalPipeline" "Queue"="Geometry" }
         LOD 200
 
         Pass

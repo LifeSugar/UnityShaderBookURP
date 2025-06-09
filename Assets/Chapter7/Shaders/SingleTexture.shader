@@ -71,11 +71,11 @@ Shader "Unity Shader Book/Chapter7/SingleTexture"
             {
                 
                 float2 uv = TRANSFORM_TEX(IN.uv, _MainTex);
-                float3 c = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv);
+                float3 c = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv).rgb;
                 float3 diffuse = HalfLambertDiffuse(IN.normalWS, c);
                 float3 ambient = SampleSH(IN.normalWS);
-                float3 specular = BlinnPhongSpecular(IN.normalWS, IN.positionWS, _Specular, _Gloss );
-                float3 color = _ColorTint * diffuse + ambient + specular;
+                float3 specular = BlinnPhongSpecular(IN.normalWS, IN.positionWS, _Specular.xyz, _Gloss );
+                float3 color = _ColorTint.rgb * diffuse + ambient + specular;
                 return float4(color ,1);
             }
 

@@ -5,6 +5,7 @@ Shader"Unity Shader Book/Debug"
         Tags
         {
             "RenderPipeline" = "UniversalRenderPipeline"
+            "Queue" = "Geometry"
         }
         LOD 100
         
@@ -13,7 +14,7 @@ Shader"Unity Shader Book/Debug"
             Tags
             {
                 "LightMode" = "UniversalForward"
-                "Queue" = "Geometry"
+                
             }
             Cull Back
             ZTest LEqual
@@ -44,13 +45,9 @@ Shader"Unity Shader Book/Debug"
 
             float4 frag (v2f IN) : SV_Target
             {
-                float3 a = float3(0.3, 0.2, 0.4);
-                float3 b = float3(0.1, 1, 0.4);
-                float3 c = float3(1, 0.5, 0.9);
+                
 
-                float3x2 m = float3x3(a, b, c);
-
-                return float4(m[0][1], m[0][1], m[0][1], 1);
+                return float4(IN.positonHCS.xyz, 1);
             }
 
 

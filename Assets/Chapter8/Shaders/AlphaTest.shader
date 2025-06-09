@@ -11,7 +11,7 @@ Shader"Unity Shader Book/Chapter8/Alpha Test"
     {
         Tags
         {
-            "RenderPipeline" = "UniversalRenderPipeline"
+            "RenderPipeline" = "UniversalPipeline"
             "Queue" = "AlphaTest"
             "IgnoreProjector" = "True"
         }//这里不用写rendertype，那个只对Build-in RP有用
@@ -32,6 +32,9 @@ Shader"Unity Shader Book/Chapter8/Alpha Test"
 
             #pragma vertex vert
             #pragma fragment frag
+            
+            #pragma target 4.5
+
 
             struct appdata
             {

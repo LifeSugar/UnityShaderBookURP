@@ -12,7 +12,7 @@ Shader "Unity Shader Book/Chapter7/RampTexture"
     {
         Tags
         {
-            "RenderPipeline" = "UniversalRenderPipeline"
+            "RenderPipeline" = "UniversalPipeline"
             "Queue" = "Geometry"
         }
         LOD 200

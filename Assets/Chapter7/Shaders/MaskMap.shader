@@ -16,7 +16,7 @@ Shader"Unity Shader Book/Chapter7/MaskMap"
     {
         Tags
         {
-            "RenderPipeline" = "UniversalRenderPipeline"
+            "RenderPipeline" = "UniversalPipeline"
             "Queue" = "Geometry"
         }
         
@@ -107,7 +107,7 @@ Shader"Unity Shader Book/Chapter7/MaskMap"
                 float specular = pow(saturate(dot(N, H)), _Gloss) * mask * _SpecularScale;
                 // return float4(normalTS * 0.5 + 0.5, 1);
 
-                return float4 (diffuse * albedo * _Color + specular * _Specular.xyz, 1);
+                return float4 (diffuse * albedo * _Color.rgb + specular * _Specular.xyz, 1);
                 
                 
             }

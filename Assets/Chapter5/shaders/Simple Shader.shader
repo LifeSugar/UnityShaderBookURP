@@ -3,6 +3,7 @@ Shader "Unity Shader Book/Chapter5/Simple Shader"
     Properties
     {
         _Color ("Color Tint", Color) = (1.0, 1.0, 1.0, 1.0)
+        _MainTex("MainTex", 2D) = "white" { }
     }
     
     SubShader
@@ -45,8 +46,11 @@ Shader "Unity Shader Book/Chapter5/Simple Shader"
             };
 
             CBUFFER_START(UnityPerMaterial)
-            float4 _Color;
+                float4 _Color;
+                float4 _MainTex_ST;
             CBUFFER_END
+
+            TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
 
 
             v2f vert (appdata IN)

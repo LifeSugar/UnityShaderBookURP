@@ -14,7 +14,7 @@ Shader"Unity Shader Book/Chapter7/Normal Map In World Space TBN"
     {
         Tags
         {
-            "RenderPipeline" = "UniversalRenderPipeline"
+            "RenderPipeline" = "UniversalPipeline"
             "Queue" = "Geometry"
         }
         LOD 200
