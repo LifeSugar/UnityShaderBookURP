@@ -10,7 +10,7 @@
 ### **第一篇：基础篇 (原理通用)**
 * **第2章 渲染流水线**：
     * *不变*：GPU 架构、光栅化、数学基础。
-    * *变化*：理解 **SRP (Scriptable Render Pipeline)** 的工作流，SRP Batcher 如何改变了 Draw Call 的合并方式。
+    * *变化*：理解 **SRP (Scriptable Render Pipeline)** 的工作流
 * **第3章 Unity Shader 基础**：
     * *变化*：从 `CGPROGRAM` 转向 `HLSLPROGRAM`。
     * *变化*：SubShader Tags 中必须包含 `"RenderPipeline" = "UniversalPipeline"`。
